@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Meta Quest 3S / Horizon OS Compatibility Flags -->
@@ -22,16 +24,16 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Quest Voice Pad"
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.QuestAIKeyboard">
 
-        <!-- Keyboard Setup & Permission Activity -->
+        <!-- Main Quest Voice Pad Panel Activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="Quest Voice Pad"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +41,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Quest AI Input Method Service -->
+        <!-- Optional Quest AI Input Method Service -->
         <service
             android:name=".QuestIME"
             android:label="@string/app_name"

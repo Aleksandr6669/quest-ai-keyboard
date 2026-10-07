@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Quest Voice Pad</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background-color: #121316;
+      color: #FFFFFF;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #23272F;
+    }
+    .app-title {
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lang-switcher {
+      display: flex;
+      background: #1E2025;
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+      border: 1px solid #2B2F38;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: #9DA3AE;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .lang-btn.active {
+      background: #1877F2;
+      color: #FFFFFF;
+    }
+    
+    /* Main Voice Section */
+    .voice-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0 16px;
+    }
+    .mic-button-wrapper {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pulse-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(24, 119, 242, 0.4);
+      opacity: 0;
+      transform: scale(0.9);
+      pointer-events: none;
+    }
+    .listening .pulse-ring {
+      animation: pulse 1.5s infinite ease-out;
+      background: rgba(255, 59, 48, 0.4);
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+    .mic-btn {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #1877F2;
+      border: 3px solid #2B2F38;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      box-shadow: 0 8px 24px rgba(24, 119, 242, 0.3);
+      transition: transform 0.15s, background-color 0.2s;
+      z-index: 2;
+    }
+    .mic-btn:active {
+      transform: scale(0.92);
+    }
+    .listening .mic-btn {
+      background: #FF3B30;
+      box-shadow: 0 8px 28px rgba(255, 59, 48, 0.5);
+    }
+
+    .status-text {
+      margin-top: 14px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #9DA3AE;
+      text-align: center;
+      min-height: 22px;
+    }
+    .status-text.active {
+      color: #FF453A;
+      font-weight: 600;
+    }
+
+    /* Live Output Box */
+    .transcript-card {
+      background: #1A1D24;
+      border: 1px solid #2B2F38;
+      border-radius: 14px;
+      padding: 16px;
+      min-height: 90px;
+      max-height: 140px;
+      overflow-y: auto;
+      font-size: 17px;
+      line-height: 1.5;
+      color: #FFFFFF;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    .transcript-placeholder {
+      color: #6C727F;
+      font-style: italic;
+    }
+    .interim-text {
+      color: #9DA3AE;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      align-items: center;
+    }
+    .action-btn {
+      flex: 1;
+      height: 48px;
+      background: #272A30;
+      color: #FFFFFF;
+      border: 1px solid #333740;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .action-btn.primary {
+      background: #1877F2;
+      border-color: #1877F2;
+    }
+    .action-btn:active {
+      opacity: 0.8;
+    }
+    .auto-copy-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #9DA3AE;
+      margin-left: 4px;
+    }
+    .auto-copy-toggle input {
+      width: 18px;
+      height: 18px;
+      accent-color: #1877F2;
+      cursor: pointer;
+    }
+
+    /* History List */
+    .history-section {
+      margin-top: 18px;
+      flex: 1;
+    }
+    .history-header {
+      font-size: 13px;
+      font-weight: 600;
+      color: #6C727F;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .history-item {
+      background: #1E2025;
+      border: 1px solid #2B2F38;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .history-text {
+      font-size: 14px;
+      color: #E4E7EB;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    .history-copy-btn {
+      background: #272A30;
+      border: 1px solid #333740;
+      color: #9DA3AE;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .history-copy-btn:active {
+      background: #1877F2;
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="app-title">
+      <span>🎙️</span>
+      <span>Quest Voice Pad</span>
+    </div>
+    <div class="lang-switcher">
+      <button id="btnRu" class="lang-btn active" onclick="setLanguage('ru-RU')">🇷🇺 RU</button>
+      <button id="btnEn" class="lang-btn" onclick="setLanguage('en-US')">🇬🇧 EN</button>
+    </div>
+  </header>
+
+  <div class="voice-center" id="voiceContainer">
+    <div class="mic-button-wrapper">
+      <div class="pulse-ring"></div>
+      <button class="mic-btn" id="btnMic" onclick="toggleRecognition()">🎙️</button>
+    </div>
+    <div class="status-text" id="statusText">Нажмите микрофон и говорите</div>
+  </div>
+
+  <div class="transcript-card" id="transcriptCard">
+    <span class="transcript-placeholder" id="placeholder">Здесь появится распознанный текст...</span>
+    <span id="finalText"></span><span id="interimText" class="interim-text"></span>
+  </div>
+
+  <div class="controls-bar">
+    <button class="action-btn primary" onclick="copyCurrentText()">
+      📋 Скопировать
+    </button>
+    <button class="action-btn" onclick="clearCurrentText()">
+      🗑️ Очистить
+    </button>
+    <label class="auto-copy-toggle">
+      <input type="checkbox" id="chkAutoCopy" checked>
+      <span>Автокопирование</span>
+    </label>
+  </div>
+
+  <div class="history-section">
+    <div class="history-header">История диктовок</div>
+    <div class="history-list" id="historyList">
+      <!-- Recent phrases will appear here -->
+    </div>
+  </div>
+
+  <script>
+    let recognition = null;
+    let isListening = false;
+    let currentLang = 'ru-RU';
+    let currentFinalTranscript = '';
+    const historyItems = [];
+
+    const statusText = document.getElementById('statusText');
+    const voiceContainer = document.getElementById('voiceContainer');
+    const finalTextEl = document.getElementById('finalText');
+    const interimTextEl = document.getElementById('interimText');
+    const placeholderEl = document.getElementById('placeholder');
+    const chkAutoCopy = document.getElementById('chkAutoCopy');
+    const historyList = document.getElementById('historyList');
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.getElementById('btnRu').classList.toggle('active', lang === 'ru-RU');
+      document.getElementById('btnEn').classList.toggle('active', lang === 'en-US');
+      if (isListening) {
+        stopRecognition();
+        setTimeout(startRecognition, 300);
+      }
+    }
+
+    function initRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        statusText.innerText = 'Web Speech API не поддерживается на этом WebView';
+        return false;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = currentLang;
+
+      recognition.onstart = () => {
+        isListening = true;
+        voiceContainer.classList.add('listening');
+        statusText.innerText = currentLang === 'ru-RU' ? '🔴 Слушаю... Говорите' : '🔴 Listening... Speak now';
+        statusText.classList.add('active');
+      };
+
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            currentFinalTranscript += transcript + ' ';
+            onPhraseFinalized(transcript.trim());
+          } else {
+            interim += transcript;
+          }
+        }
+        updateTranscriptView(interim);
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Speech error:', event.error);
+        if (event.error === 'not-allowed') {
+          statusText.innerText = 'Предоставьте разрешение на микрофон';
+        } else if (event.error === 'network') {
+          statusText.innerText = 'Ошибка сети для распознавания';
+        } else {
+          statusText.innerText = 'Ошибка: ' + event.error;
+        }
+        stopRecognition();
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        voiceContainer.classList.remove('listening');
+        statusText.classList.remove('active');
+        if (!statusText.innerText.includes('Скопировано')) {
+          statusText.innerText = 'Нажмите микрофон и говорите';
+        }
+      };
+
+      return true;
+    }
+
+    function toggleRecognition() {
+      if (isListening) {
+        stopRecognition();
+      } else {
+        startRecognition();
+      }
+    }
+
+    function startRecognition() {
+      if (!recognition) {
+        if (!initRecognition()) return;
+      }
+      recognition.lang = currentLang;
+      try {
+        recognition.start();
+      } catch (e) {
+        console.warn('Error starting speech:', e);
+      }
+    }
+
+    function stopRecognition() {
+      if (recognition && isListening) {
+        recognition.stop();
+      }
+    }
+
+    function updateTranscriptView(interim) {
+      if (currentFinalTranscript || interim) {
+        placeholderEl.style.display = 'none';
+      } else {
+        placeholderEl.style.display = 'inline';
+      }
+      finalTextEl.innerText = currentFinalTranscript;
+      interimTextEl.innerText = interim;
+    }
+
+    function onPhraseFinalized(phrase) {
+      if (!phrase) return;
+
+      if (chkAutoCopy.checked) {
+        sendToAndroidClipboard(phrase);
+        statusText.innerText = '✅ Скопировано в буфер обмена!';
+        setTimeout(() => {
+          if (!isListening) statusText.innerText = 'Нажмите микрофон и говорите';
+        }, 2500);
+      }
+
+      addHistoryItem(phrase);
+    }
+
+    function sendToAndroidClipboard(text) {
+      if (window.AndroidBridge && window.AndroidBridge.copyToClipboard) {
+        window.AndroidBridge.copyToClipboard(text);
+      } else {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+    }
+
+    function copyCurrentText() {
+      const textToCopy = (currentFinalTranscript + ' ' + interimTextEl.innerText).trim();
+      if (!textToCopy) {
+        if (window.AndroidBridge && window.AndroidBridge.showToast) {
+          window.AndroidBridge.showToast('Нет текста для копирования');
+        }
+        return;
+      }
+      sendToAndroidClipboard(textToCopy);
+      statusText.innerText = '✅ Скопировано в буфер!';
+      setTimeout(() => {
+        if (!isListening) statusText.innerText = 'Нажмите микрофон и говорите';
+      }, 2000);
+    }
+
+    function clearCurrentText() {
+      currentFinalTranscript = '';
+      interimTextEl.innerText = '';
+      finalTextEl.innerText = '';
+      placeholderEl.style.display = 'inline';
+    }
+
+    function addHistoryItem(text) {
+      historyItems.unshift(text);
+      if (historyItems.length > 10) historyItems.pop();
+      renderHistory();
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = '';
+      historyItems.forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'history-item';
+        
+        const textSpan = document.createElement('span');
+        textSpan.className = 'history-text';
+        textSpan.innerText = item;
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'history-copy-btn';
+        copyBtn.innerText = 'В буфер';
+        copyBtn.onclick = () => sendToAndroidClipboard(item);
+
+        row.appendChild(textSpan);
+        row.appendChild(copyBtn);
+        historyList.appendChild(row);
+      });
+    }
+
+    window.onload = () => {
+      initRecognition();
+    };
+  </script>
+</body>
+</html>

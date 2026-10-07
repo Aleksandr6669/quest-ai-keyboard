@@ -1,4 +1,4 @@
-name: Build Quest AI Keyboard APK
+name: Build Quest Voice Pad APK
 
 on:
   push:
@@ -9,8 +9,6 @@ on:
 
 permissions:
   contents: write
-  issues: write
-  pull-requests: write
 
 jobs:
   build:
@@ -34,7 +32,6 @@ jobs:
           gradle-version: "8.5"
 
       - name: Generate Wrapper and Build Debug APK
-        id: build_step
         run: |
           gradle wrapper --gradle-version 8.5
           chmod +x gradlew
@@ -43,38 +40,38 @@ jobs:
       - name: Rename APK for release
         run: |
           mkdir -p release-output
-          cp app/build/outputs/apk/debug/app-debug.apk release-output/QuestAIKeyboard-v1.0.0.apk
+          cp app/build/outputs/apk/debug/app-debug.apk release-output/QuestVoicePad-v1.1.0.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: QuestAIKeyboard-v1.0.0-apk
-          path: release-output/QuestAIKeyboard-v1.0.0.apk
+          name: QuestVoicePad-v1.1.0-apk
+          path: release-output/QuestVoicePad-v1.1.0.apk
           if-no-files-found: error
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.0
-          name: Quest AI Keyboard v1.0.0 (Release)
+          tag_name: v1.1.0
+          name: Quest Voice Pad v1.1.0 (Release)
           body: |
-            ### 🧠 Quest AI Keyboard for Meta Quest 3S / Horizon OS
+            ### 🎙️ Quest Voice Pad for Meta Quest 3S / Horizon OS
             
-            Автоматическая сборка умной виртуальной клавиатуры (IME) с голосовым вводом для очков Meta Quest.
+            Плавающая панель голосового ввода для очков Meta Quest на встроенном веб-движке (Web Speech API).
             
             **Особенности:**
-            - 🇷🇺 Русская раскладка (ЙЦУКЕН)
-            - 🇬🇧 Английская раскладка (QWERTY)
-            - 🎙️ Голосовой ввод на русском и английском языках (Google Speech / Android Recognizer)
-            - 🔣 Цифровая и символьная панель
-            - 👓 Оптимизировано под лазерный указатель и контроллеры Meta Quest 3S (увеличенные клавиши, контрастный темный интерфейс Horizon OS)
+            - 🎙️ Голосовой ввод на русском (`ru-RU`) и английском (`en-US`) через встроенный движок Chromium WebView.
+            - ⚡ **Мгновенное автокопирование** надиктованного текста в системный буфер обмена (`Clipboard`).
+            - 📋 Быстрая вставка в браузер, мессенджеры и любые другие окна Quest через команду «Вставить» (Paste).
+            - 🕒 История последних надиктованных фраз.
+            - 🕶️ Компактный интерфейс для комфортного размещения рядом с браузером в режиме многозадачности Horizon OS.
             
             **Установка:**
-            1. Скачайте `QuestAIKeyboard-v1.0.0.apk` ниже.
-            2. Подключите Meta Quest 3S к ПК и установите файл через **SideQuest** или `adb install -r QuestAIKeyboard-v1.0.0.apk`.
-            3. Запустите приложение из вкладки "Неизвестные источники" (Unknown Sources).
-            4. Нажмите кнопки настройки, чтобы включить клавиатуру и разрешить микрофон.
-          files: release-output/QuestAIKeyboard-v1.0.0.apk
+            1. Скачайте `QuestVoicePad-v1.1.0.apk` ниже.
+            2. Установите через **SideQuest** или команду:
+               `adb install -r QuestVoicePad-v1.1.0.apk`
+            3. Запустите **Quest Voice Pad** из раздела «Неизвестные источники» (Unknown Sources).
+          files: release-output/QuestVoicePad-v1.1.0.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
