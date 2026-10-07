@@ -3,10 +3,14 @@ name: Build Quest AI Keyboard APK
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
   contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   build:
@@ -29,8 +33,12 @@ jobs:
         with:
           gradle-version: "8.5"
 
-      - name: Build Debug APK with Gradle
-        run: gradle assembleDebug --stacktrace
+      - name: Generate Wrapper and Build Debug APK
+        id: build_step
+        run: |
+          gradle wrapper --gradle-version 8.5
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace
 
       - name: Rename APK for release
         run: |
