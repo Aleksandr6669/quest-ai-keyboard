@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Quest AI Keyboard</string>
+    <string name="subtype_en">English (US)</string>
+    <string name="subtype_ru">Русский</string>
+    <string name="enable_keyboard_title">Настройка Quest AI Keyboard</string>
+    <string name="step1_enable">1. Включить клавиатуру в настройках системы</string>
+    <string name="step2_select">2. Выбрать Quest AI Keyboard как текущую</string>
+    <string name="step3_mic">3. Предоставить разрешение на микрофон (голос)</string>
+    <string name="test_field_hint">Попробуйте ввести текст здесь...</string>
+    <string name="mic_permission_granted">Разрешение на микрофон предоставлено!</string>
+    <string name="listening_ru">Слушаю... (Русский)</string>
+    <string name="listening_en">Listening... (English)</string>
+    <string name="voice_error">Ошибка распознавания речи</string>
+</resources>

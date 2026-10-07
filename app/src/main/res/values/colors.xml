@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Horizon OS / Quest Dark Modern Palette -->
+    <color name="bg_keyboard">#18191C</color>
+    <color name="bg_key">#272A30</color>
+    <color name="bg_key_pressed">#3E424B</color>
+    <color name="bg_key_special">#333740</color>
+    <color name="accent_blue">#1877F2</color>
+    <color name="accent_voice_active">#FF3B30</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#9DA3AE</color>
+    <color name="key_border">#333740</color>
+</resources>

@@ -1,2 +1,69 @@
-# quest-ai-keyboard
-Smart virtual keyboard (IME) for Meta Quest 3S / Horizon OS with voice typing (RU/EN) and VR-optimized layouts
+# 🧠 Quest AI Keyboard for Meta Quest 3S / Horizon OS
+
+[![Build Quest AI Keyboard APK](https://github.com/Aleksandr6669/quest-ai-keyboard/actions/workflows/build-apk.yml/badge.svg)](https://github.com/Aleksandr6669/quest-ai-keyboard/actions/workflows/build-apk.yml)
+
+**Quest AI Keyboard** — специализированная системная клавиатура (Android InputMethodService / IME) для очков виртуальной и смешанной реальности **Meta Quest 3S, Quest 3 и Quest 2** на базе Meta Horizon OS.
+
+Разработана с учетом специфики управления в VR: крупные контрастные клавиши под лазерный трекинг и жесты рук, переключение языков в один клик и интегрированный голосовой ввод.
+
+---
+
+## ✨ Возможности
+
+* 🇷🇺 **Русская раскладка**: полная клавиатура ЙЦУКЕН.
+* 🇬🇧 **Английская раскладка**: стандартный QWERTY.
+* 🎙️ **Интеллектуальный голосовой ввод**:
+  * Поддержка распознавания речи на русском (`ru-RU`) и английском (`en-US`).
+  * Переключение языка голосового ввода синхронно с раскладкой.
+  * Визуальный статус распознавания речи прямо над клавишами.
+* 🔣 **Символьный блок**: полный набор знаков препинания, цифр и спецсимволов.
+* 🕶️ **VR-оптимизация**:
+  * Крупные зоны нажатия (56dp) для точного попадания лазерным лучом контроллера или пальцами в Hand Tracking.
+  * Темная высококонтрастная тема в стиле Horizon OS.
+  * Поддержка автоповтора удаления (Backspace repeat).
+  * Кнопка быстрого скрытия клавиатуры (`⌨️⬇`).
+
+---
+
+## 🚀 Как скачать готовый APK
+
+Проект автоматически компилируется с помощью **GitHub Actions**:
+1. Перейдите во вкладку [Releases](https://github.com/Aleksandr6669/quest-ai-keyboard/releases).
+2. Скачайте свежий файл **`QuestAIKeyboard-v1.0.0.apk`**.
+3. Либо перейдите во вкладку [Actions](https://github.com/Aleksandr6669/quest-ai-keyboard/actions), выберите последний запуск и скачайте артефакт сборки в блоке *Artifacts*.
+
+---
+
+## 📲 Установка и активация на Meta Quest 3S
+
+### Шаг 1: Установка APK
+* **Через SideQuest**: перетащите скачанный `.apk` файл в окно SideQuest.
+* **Через ADB**:
+  ```bash
+  adb install -r QuestAIKeyboard-v1.0.0.apk
+  ```
+
+### Шаг 2: Активация клавиатуры
+1. В шоломе откройте библиотеку приложений и выберите фильтр **«Неизвестные источники» (Unknown Sources)**.
+2. Запустите приложение **Quest AI Keyboard**.
+3. В окне приложения выполните три простых действия:
+   * Нажмите **«1. Включить клавиатуру в настройках»** и переведите переключатель напротив Quest AI Keyboard в активное положение.
+   * Нажмите **«2. Выбрать Quest AI Keyboard»** и выберите её в качестве текущего метода ввода.
+   * Нажмите **«3. Предоставить разрешение на микрофон»** для работы голосового ввода.
+4. Проверьте ввод в тестовом поле внизу экрана.
+
+---
+
+## 🛠️ Сборка локально (для разработчиков)
+
+```bash
+git clone https://github.com/Aleksandr6669/quest-ai-keyboard.git
+cd quest-ai-keyboard
+./gradlew assembleDebug
+```
+Готовый APK появится по пути: `app/build/outputs/apk/debug/app-debug.apk`.
+
+---
+
+## 📄 Лицензия
+MIT License.
